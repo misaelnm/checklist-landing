@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Anti-Clausura | Estrato Legal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1e3a5f;
+            --color-secondary: #2c5282;
+            --color-accent: #c9a227;
+            --color-bg: #fafafa;
+            --color-text: #1a202c;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .text-primary { color: var(--color-primary); }
+        .text-secondary { color: var(--color-secondary); }
+        .text-accent { color: var(--color-accent); }
+        .bg-primary { background-color: var(--color-primary); }
+        .bg-secondary { background-color: var(--color-secondary); }
+        
+        .elegant-shadow {
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
+        }
+        
+        .subtle-border {
+            border: 1px solid rgba(30, 58, 95, 0.1);
+        }
+        
+        /* WhatsApp Floating Button */
+        .whatsapp-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+        
+        .whatsapp-btn {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border: 1px solid rgba(30, 58, 95, 0.15);
+            border-radius: 50%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: #25d366;
+        }
+        
+        .whatsapp-icon {
+            color: #25d366;
+            width: 26px;
+            height: 26px;
+            transition: transform 0.3s ease;
+        }
+        
+        .whatsapp-btn:hover .whatsapp-icon {
+            transform: scale(1.1);
+        }
+        
+        .whatsapp-tooltip {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            font-size: 13px;
+            color: var(--color-primary);
+            white-space: nowrap;
+            border: 1px solid rgba(30, 58, 95, 0.1);
+            margin-right: 8px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-weight: 500;
+        }
+        
+        .whatsapp-container:hover .whatsapp-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .whatsapp-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(30, 58, 95, 0.08);
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .whatsapp-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        
+        .menu-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-bottom: 1px solid rgba(30, 58, 95, 0.06);
+            padding: 20px;
+        }
+        
+        .menu-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(30, 58, 95, 0.04);
+            text-decoration: none;
+            color: var(--color-text);
+        }
+        
+        .menu-option:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-option:hover {
+            background: #f8fafc;
+        }
+        
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(30, 58, 95, 0.05);
+            color: var(--color-primary);
+            transition: all 0.2s ease;
+        }
+        
+        .menu-option:hover .option-icon {
+            background: var(--color-primary);
+            color: white;
+        }
+        
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .online-dot::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: #22c55e;
+            opacity: 0.3;
+            animation: pulse-soft 2s infinite;
+        }
+        
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0; }
+        }
+        
+        .icon-close {
+            position: absolute;
+            opacity: 0;
+            transform: rotate(-90deg);
+            transition: all 0.3s ease;
+            color: var(--color-primary);
+            width: 22px;
+            height: 22px;
+        }
+        
+        .whatsapp-menu.active ~ .whatsapp-btn .icon-close {
+            opacity: 1;
+            transform: rotate(0);
+        }
+        
+        .whatsapp-menu.active ~ .whatsapp-btn .whatsapp-icon {
+            opacity: 0;
+            transform: rotate(90deg);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: transparent;
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border: 1px solid rgba(30, 58, 95, 0.08);
+            box-shadow: 0 10px 40px rgba(30, 58, 95, 0.06);
+        }
+        
+        .input-elegant {
+            border: 1px solid rgba(30, 58, 95, 0.15);
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        
+        .input-elegant:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.08);
+            background: white;
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-secondary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.2);
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 58, 95, 0.1), transparent);
+        }
+        
+        .accent-line {
+            width: 60px;
+            height: 3px;
+            background: var(--color-accent);
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <!-- Main Container -->
+    <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- Left Column: Content -->
+        <div class="space-y-8">
+            
+            <!-- Logo -->
+            <div class="mb-6">
+                <img src="/mnt/kimi/upload/1000197644.jpg" 
+                     alt="Estrato Legal Consultores" 
+                     class="h-16 w-auto">
+            </div>
+
+            <!-- Accent Line -->
+            <div class="accent-line"></div>
+
+            <!-- Headline -->
+            <div class="space-y-4">
+                <p class="text-sm font-semibold tracking-widest text-secondary uppercase">Recursos Gratuitos</p>
+                <h1 class="font-serif text-4xl lg:text-5xl xl:text-6xl text-primary leading-tight">
+                    Checklist <em class="not-italic text-accent">Anti-Clausura</em>
+                </h1>
+                <h2 class="text-xl lg:text-2xl text-secondary font-light">
+                    7 puntos críticos que tu establecimiento o construcción debe cumplir hoy
+                </h2>
+            </div>
+
+            <!-- Description -->
+            <p class="text-gray-600 leading-relaxed text-lg">
+                Antes de que llegue la próxima visita de verificación, descarga nuestra guía gratuita 
+                para blindar tu negocio. Te ayudamos a evitar multas y clausuras que pueden afectar gravemente 
+                tu operación.
+            </p>
+
+            <!-- Benefits -->
+            <div class="space-y-4 pt-4">
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-primary font-semibold text-sm">01</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-primary">Vicios ocultos en permisos</h4>
+                        <p class="text-gray-600 text-sm mt-1">Identifica los aspectos que revisan las autoridades para iniciar suspensiones</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-primary font-semibold text-sm">02</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-primary">Documentación en orden</h4>
+                        <p class="text-gray-600 text-sm mt-1">Conoce exactamente qué documentos debes tener visibles según normativa vigente</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-primary font-semibold text-sm">03</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-primary">Prevención de sanciones</h4>
+                        <p class="text-gray-600 text-sm mt-1">Evita errores comunes que duplican multas por obstrucción a la autoridad</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Note -->
+            <div class="bg-primary/5 border-l-4 border-accent p-6 rounded-r-lg">
+                <p class="text-primary font-medium">
+                    ¿Ya recibiste una notificación oficial?
+                </p>
+                <p class="text-gray-600 text-sm mt-2">
+                    Contáctanos de inmediato. El tiempo es crucial para presentar tus medios de defensa. 
+                    <a href="#" onclick="openWhatsAppUrgent(); return false;" class="text-accent font-semibold hover:underline">Habla con un especialista →</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Column: Form -->
+        <div class="lg:pl-8">
+            <div class="form-container rounded-2xl p-8 lg:p-10">
+                <div class="text-center mb-8">
+                    <h3 class="font-serif text-2xl text-primary mb-2">Descarga gratuita</h3>
+                    <p class="text-gray-500 text-sm">Complete el formulario para recibir el checklist</p>
+                </div>
+
+                <form class="space-y-6" onsubmit="handleSubmit(event)">
+                    <div>
+                        <label class="block text-sm font-medium text-primary mb-2">Nombre completo</label>
+                        <input type="text" required 
+                               class="w-full px-4 py-3 rounded-lg input-elegant text-primary placeholder-gray-400"
+                               placeholder="Ej: Juan Pérez">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-primary mb-2">Correo electrónico</label>
+                        <input type="email" required 
+                               class="w-full px-4 py-3 rounded-lg input-elegant text-primary placeholder-gray-400"
+                               placeholder="tu@email.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-primary mb-2">Teléfono (opcional)</label>
+                        <input type="tel" 
+                               class="w-full px-4 py-3 rounded-lg input-elegant text-primary placeholder-gray-400"
+                               placeholder="Para contacto de emergencia">
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full btn-primary py-4 px-6 rounded-lg uppercase tracking-wide text-sm">
+                        QUIERO EL CHECKLIST GRATIS Y BLINDAR MI NEGOCIO
+                    </button>
+
+                    <p class="text-xs text-center text-gray-400 mt-4">
+                        Al registrarte, aceptas nuestra política de privacidad. 
+                        Tu información está protegida y nunca será compartida.
+                    </p>
+                </form>
+
+                <div class="divider my-6"></div>
+
+                <!-- Trust Indicators -->
+                <div class="flex justify-center gap-8 text-xs text-gray-500">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span>Confidencial</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Verificado</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span>Seguro</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="mt-6 text-center">
+                <p class="text-xs text-gray-400">
+                    Estrato Legal · Especialistas en defensa administrativa y litigio fiscal
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHATSAPP FLOATING BUTTON -->
+    <div class="menu-overlay" id="menuOverlay" onclick="closeWhatsAppMenu()"></div>
+    
+    <div class="whatsapp-container">
+        <div class="whatsapp-tooltip">
+            ¿Necesitas asesoría? <span style="color: #25d366;">Escríbenos</span>
+        </div>
+
+        <div class="whatsapp-menu" id="whatsappMenu">
+            <div class="menu-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border border-gray-200">
+                        <img src="/mnt/kimi/upload/1000197644.jpg" 
+                             alt="Estrato Legal" 
+                             class="w-full h-full object-contain bg-white p-1">
+                    </div>
+                    <div>
+                        <p class="font-semibold text-primary text-sm">Estrato Legal</p>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="online-dot"></span>
+                            <span class="text-xs text-green-600">En línea</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="https://wa.me/5212345678900?text=Hola%2C%20vi%20su%20checklist%20anti-clausura%20y%20me%20gustaría%20recibir%20asesoría." 
+                   target="_blank"
+                   class="menu-option"
+                   onclick="closeWhatsAppMenu()">
+                    <div class="option-icon">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-primary text-sm">Solicitar checklist</p>
+                        <p class="text-xs text-gray-500">Te lo enviamos por WhatsApp</p>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/5212345678900?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20negocio." 
+                   target="_blank"
+                   class="menu-option"
+                   onclick="closeWhatsAppMenu()">
+                    <div class="option-icon">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-primary text-sm">Consulta general</p>
+                        <p class="text-xs text-gray-500">Resolver dudas específicas</p>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/5212345678900?text=Hola%2C%20tengo%20una%20situación%20urgente%20con%20mi%20negocio." 
+                   target="_blank"
+                   class="menu-option"
+                   onclick="closeWhatsAppMenu()">
+                    <div class="option-icon" style="background: rgba(201, 162, 39, 0.1); color: var(--color-accent);">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-primary text-sm">Asesoría urgente</p>
+                        <p class="text-xs text-gray-500">Respuesta prioritaria</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                <p class="text-xs text-gray-400 text-center">Horario: Lun - Vie · 9:00 - 18:00</p>
+            </div>
+        </div>
+
+        <button onclick="toggleWhatsAppMenu()" class="whatsapp-btn" aria-label="Abrir chat">
+            <svg class="whatsapp-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            
+            <svg class="icon-close" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        function toggleWhatsAppMenu() {
+            const menu = document.getElementById('whatsappMenu');
+            const overlay = document.getElementById('menuOverlay');
+            
+            if (menu.classList.contains('active')) {
+                closeWhatsAppMenu();
+            } else {
+                menu.classList.add('active');
+                overlay.classList.add('active');
+            }
+        }
+
+        function closeWhatsAppMenu() {
+            const menu = document.getElementById('whatsappMenu');
+            const overlay = document.getElementById('menuOverlay');
+            
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function openWhatsAppUrgent() {
+            const message = "Hola, tengo una situación urgente con mi negocio y necesito asesoría inmediata.";
+            window.open(`https://wa.me/5212345678900?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeWhatsAppMenu();
+            }
+        });
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            
+            btn.innerText = 'Procesando...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerText = '¡Revisa tu correo!';
+                btn.style.background = '#16a34a';
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    e.target.reset();
+                }, 3000);
+            }, 1500);
+        }
+
+        gsap.from(".form-container", {
+            duration: 1,
+            x: 50,
+            opacity: 0,
+            ease: "power3.out",
+            delay: 0.3
+        });
+
+        gsap.from("h1", {
+            duration: 0.8,
+            y: 30,
+            opacity: 0,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+</html>

@@ -557,26 +557,20 @@
         });
 
         function handleSubmit(e) {
-            e.preventDefault();
-            
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            
-            btn.innerText = 'Procesando...';
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                btn.innerText = '¡Revisa tu correo!';
-                btn.style.background = '#16a34a';
-                
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    btn.style.background = '';
-                    e.target.reset();
-                }, 3000);
-            }, 1500);
-        }
+    e.preventDefault();
+    
+    const btn = e.target.querySelector('button');
+    const originalText = btn.innerText;
+    
+    btn.innerText = 'Enviando...';
+    btn.disabled = true;
+    
+    // Simular envío
+    setTimeout(() => {
+        // Redirigir a página de gracias
+        window.location.href = 'gracias.html';
+    }, 1500);
+}
 
         gsap.from(".form-container", {
             duration: 1,
@@ -596,5 +590,6 @@
 </body>
 
 </html>
+
 
 
